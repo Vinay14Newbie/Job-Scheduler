@@ -11,3 +11,10 @@ export const getAllJobs = async () => {
 export const getJobById = async (id) => {
   return prisma.job.findUnique({ where: { id } });
 };
+
+export const updateJobStatus = (id, status) => {
+  return prisma.job.update({
+    where: { id: Number(id) },
+    data: { status },
+  });
+};
