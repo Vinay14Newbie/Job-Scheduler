@@ -19,13 +19,35 @@ export const getJobs = async (req, res) => {
 };
 
 export const getJobById = async (req, res) => {
-    try {
-        const job = await jobService.getJobByIdService(req.params.id);
-        if (!job) {
-            return res.status(404).json({ error: "Job not found" });
-        }
-        res.json(job);
-    } catch (error) {
-        res.statu(500).json({ error: err.message });
+  try {
+    const job = await jobService.getJobByIdService(req.params.id);
+    if (!job) {
+      return res.status(404).json({ error: "Job not found" });
     }
-}
+    res.json(job);
+  } catch (error) {
+    res.statu(500).json({ error: err.message });
+  }
+};
+
+export const executeJob = async (req, res) => {
+  try {
+    const result = await jobService.executeJobService(req.params.id);
+    res.json(result);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+export const triggerWebhook = async (req, res) => {
+  try {
+    const { webhookUrl } = req.body;
+    const result = await jobService.triggerWebhookService(
+      req.params.id,
+      webhookUrl,
+    );
+    res.json(result);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
