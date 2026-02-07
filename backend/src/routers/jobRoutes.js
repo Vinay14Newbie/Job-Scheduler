@@ -11,7 +11,7 @@ const router = Router();
 
 router.post("/", createJob);
 router.get("/", getJobs);
-router.get("/:id/jobs", getJobById);
+router.get("/jobs/:id", getJobById);
 router.post("/:id/execute", executeJob);
 router.post("/:id/webhook", triggerWebhook);
 

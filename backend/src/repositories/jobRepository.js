@@ -15,6 +15,6 @@ export const getJobById = async (id) => {
 export const updateJobStatus = (id, status) => {
   return prisma.job.update({
     where: { id: Number(id) },
-    data: { status },
+    data: { status, completedAt: status === "completed" ? new Date() : null },
   });
 };
