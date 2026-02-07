@@ -7,3 +7,7 @@ export const createJob = async (data) => {
 export const getAllJobs = async () => {
   return prisma.job.findMany();
 };
+
+export const getJobById = async (id) => {
+  return prisma.job.findUnique({ where: { id } });
+};
