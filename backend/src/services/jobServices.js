@@ -27,3 +27,27 @@ export const getJobByIdService = async (id) => {
     console.log("getJobId services error: ", error);
   }
 };
+
+export const executeJobService = async (id) => {
+  const job = await getJobByIdService(id);
+
+  // simulate execution
+  await jobRepository.updateJobStatus(id, "running");
+
+  setTimeout(async () => {
+    await jobRepository.updateJobStatus(id, "completed");
+  }, 3000);
+
+  return { message: "Job execution started" };
+};
+
+export const triggerWebhookService = async (id, webhookUrl) => {
+  const job = await getJobByIdService(id);
+
+  await axios.post(webhookUrl, {
+    jobId: job.id,
+    status: job.status
+  });
+
+  return { message: "Webhook triggered successfully" };
+};
