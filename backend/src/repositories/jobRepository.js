@@ -4,8 +4,18 @@ export const createJob = async (data) => {
   return prisma.job.create({ data });
 };
 
-export const getAllJobs = async () => {
-  return prisma.job.findMany();
+export const getAllJobs = async (filters = {}) => {
+  const where = {};
+
+  if (filters.status) {
+    where.status = filters.status;
+  }
+
+  if (filters.priority) {
+    where.priority = filters.priority;
+  }
+
+  return prisma.job.findMany({ where });
 };
 
 export const getJobById = async (id) => {

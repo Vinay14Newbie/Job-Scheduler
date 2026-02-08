@@ -12,7 +12,17 @@ export const createJobController = async (req, res) => {
 
 export const getJobsController = async (req, res) => {
   try {
-    const jobs = await jobService.getJobsService();
+    const filters = {
+      status: req.query.status || "",
+      priority: req.query.priority || "",
+    };
+
+    // Remove empty values from filters
+    Object.keys(filters).forEach(
+      (key) => filters[key] === "" && delete filters[key],
+    );
+
+    const jobs = await jobService.getJobsService(filters);
     res.json(jobs);
   } catch (err) {
     res.status(500).json({ error: err.message });

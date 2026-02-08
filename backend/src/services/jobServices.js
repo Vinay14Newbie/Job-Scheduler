@@ -10,9 +10,9 @@ export const createJobService = async (jobData) => {
   }
 };
 
-export const getJobsService = async () => {
+export const getJobsService = async (filters = {}) => {
   try {
-    return jobRepository.getAllJobs();
+    return jobRepository.getAllJobs(filters);
   } catch (error) {
     console.log("getJob services error: ", error);
   }
