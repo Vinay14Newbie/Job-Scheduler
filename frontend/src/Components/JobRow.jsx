@@ -14,8 +14,21 @@ const JobRow = ({ job, reloadJobs }) => {
 
     try {
       await runJob(job.id);
-      // Reload jobs to reflect the updated status
+
+      // Reload immediately to show "running" status
       await reloadJobs();
+
+      // Poll for status change every 500ms for up to 5 seconds
+      let isCompleted = false;
+      let attempts = 0;
+      const maxAttempts = 10; // 10 * 500ms = 5 seconds
+
+      while (!isCompleted && attempts < maxAttempts) {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        attempts++;
+        await reloadJobs();
+        // The job object in props won't update, but the table will refresh
+      }
     } catch (err) {
       const errorMessage =
         err.response?.data?.error || "Failed to run job. Please try again.";

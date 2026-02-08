@@ -1,6 +1,7 @@
 import * as jobRepository from "../repositories/jobRepository.js";
 import prisma from "../config/prismaConfig.js";
 import axios from "axios";
+import { WEBHOOK_URL } from "../config/serverConfig.js";
 
 export const createJobService = async (jobData) => {
   try {
@@ -41,30 +42,39 @@ export const executeJobService = async (jobId) => {
     throw new Error("JOB_ALREADY_COMPLETED");
   }
 
-  // Mark as running
+  // Mark as running immediately
   await prisma.job.update({
     where: { id: jobId },
     data: { status: "running" },
   });
 
-  // Simulate execution
-  setTimeout(async () => {
-    const completedJob = await prisma.job.update({
-      where: { id: jobId },
-      data: {
-        status: "completed",
-        completedAt: new Date(),
-      },
-    });
-
-    // Trigger webhook
-    await triggerWebhookService({
-      webhookUrl: completedJob.webhookUrl,
-      job: completedJob,
-    });
-  }, 3000);
+  // Schedule completion in background (don't wait for this)
+  scheduleJobCompletion(jobId);
 
   return { message: "Job execution started" };
+};
+
+// Helper function to complete job after 3 seconds
+const scheduleJobCompletion = (jobId) => {
+  setTimeout(async () => {
+    try {
+      const completedJob = await prisma.job.update({
+        where: { id: jobId },
+        data: {
+          status: "completed",
+          completedAt: new Date(),
+        },
+      });
+
+      // Trigger webhook
+      await triggerWebhookService({
+        webhookUrl: WEBHOOK_URL,
+        job: completedJob,
+      });
+    } catch (error) {
+      console.error(`Error completing job ${jobId}:`, error.message);
+    }
+  }, 3000);
 };
 
 export const triggerWebhookService = async ({ webhookUrl, job }) => {
