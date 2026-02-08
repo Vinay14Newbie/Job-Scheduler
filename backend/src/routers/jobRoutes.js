@@ -14,7 +14,7 @@ router.post("/jobs", createJobController);
 router.get("/jobs", getJobsController);
 router.get("/jobs/:id", getJobByIdController);
 router.delete("/jobs/:id", deleteJobByIdController);
-router.post("/:id/execute", executeJobController);
+router.post("/run-job/:id", executeJobController);
 router.post("/webhook-test", triggerWebhookController);
 
 export default router;
