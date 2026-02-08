@@ -46,7 +46,7 @@ export const triggerWebhookService = async (id, webhookUrl) => {
 
   await axios.post(webhookUrl, {
     jobId: job.id,
-    status: job.status
+    status: job.status,
   });
 
   return { message: "Webhook triggered successfully" };

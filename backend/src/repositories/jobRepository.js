@@ -18,3 +18,19 @@ export const updateJobStatus = (id, status) => {
     data: { status, completedAt: status === "completed" ? new Date() : null },
   });
 };
+
+export const deleteJobById = async (id) => {
+  const job = await prisma.job.findUnique({
+    where: { id },
+  });
+
+  if (!job) {
+    throw new Error("JOB_NOT_FOUND");
+  }
+
+  await prisma.job.delete({
+    where: { id },
+  });
+
+  return true;
+};

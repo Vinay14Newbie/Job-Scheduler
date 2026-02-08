@@ -1,18 +1,20 @@
 import { Router } from "express";
 import {
-  createJob,
-  getJobs,
-  getJobById,
-  executeJob,
-  triggerWebhook,
+  createJobController,
+  getJobsController,
+  getJobByIdController,
+  executeJobController,
+  triggerWebhookController,
+  deleteJobByIdController,
 } from "../controllers/jobController.js";
 
 const router = Router();
 
-router.post("/", createJob);
-router.get("/", getJobs);
-router.get("/jobs/:id", getJobById);
-router.post("/:id/execute", executeJob);
-router.post("/:id/webhook", triggerWebhook);
+router.post("/", createJobController);
+router.get("/", getJobsController);
+router.get("/jobs/:id", getJobByIdController);
+router.delete("/jobs/:id", deleteJobByIdController);
+router.post("/:id/execute", executeJobController);
+router.post("/:id/webhook", triggerWebhookController);
 
 export default router;

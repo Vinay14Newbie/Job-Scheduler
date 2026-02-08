@@ -1,6 +1,7 @@
 import * as jobService from "../services/jobServices.js";
+import { deleteJobById } from "../repositories/jobRepository.js";
 
-export const createJob = async (req, res) => {
+export const createJobController = async (req, res) => {
   try {
     const job = await jobService.createJobService(req.body);
     res.status(201).json(job);
@@ -9,7 +10,7 @@ export const createJob = async (req, res) => {
   }
 };
 
-export const getJobs = async (req, res) => {
+export const getJobsController = async (req, res) => {
   try {
     const jobs = await jobService.getJobsService();
     res.json(jobs);
@@ -18,7 +19,7 @@ export const getJobs = async (req, res) => {
   }
 };
 
-export const getJobById = async (req, res) => {
+export const getJobByIdController = async (req, res) => {
   try {
     const id = Number(req.params.id);
     if (isNaN(id)) {
@@ -35,7 +36,7 @@ export const getJobById = async (req, res) => {
   }
 };
 
-export const executeJob = async (req, res) => {
+export const executeJobController = async (req, res) => {
   try {
     const id = Number(req.params.id);
     if (isNaN(id)) {
@@ -48,7 +49,7 @@ export const executeJob = async (req, res) => {
   }
 };
 
-export const triggerWebhook = async (req, res) => {
+export const triggerWebhookController = async (req, res) => {
   try {
     const { webhookUrl } = req.body;
     const result = await jobService.triggerWebhookService(
@@ -58,5 +59,27 @@ export const triggerWebhook = async (req, res) => {
     res.json(result);
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+};
+
+export const deleteJobByIdController = async (req, res) => {
+  try {
+    const jobId = Number(req.params.id);
+
+    if (isNaN(jobId)) {
+      return res.status(400).json({ error: "Invalid job id" });
+    }
+
+    await deleteJobById(jobId);
+
+    return res.status(200).json({
+      message: "Job deleted successfully",
+    });
+  } catch (error) {
+    if (error.message === "JOB_NOT_FOUND") {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
