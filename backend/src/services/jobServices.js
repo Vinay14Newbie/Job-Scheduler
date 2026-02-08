@@ -71,7 +71,7 @@ export const triggerWebhookService = async ({ webhookUrl, job }) => {
   if (!webhookUrl) return;
 
   try {
-    await axios.post(webhookUrl, {
+    const data = await axios.post(webhookUrl, {
       event: "JOB_COMPLETED",
       data: {
         id: job.id,
@@ -84,6 +84,7 @@ export const triggerWebhookService = async ({ webhookUrl, job }) => {
     });
 
     console.log(`Webhook triggered for job ${job.id}`);
+    console.log(`Webhook response:`, data.data);
   } catch (error) {
     console.error("Webhook failed:", error.message);
   }
