@@ -10,11 +10,11 @@ import {
 
 const router = Router();
 
-router.post("/", createJobController);
-router.get("/", getJobsController);
+router.post("/jobs", createJobController);
+router.get("/jobs", getJobsController);
 router.get("/jobs/:id", getJobByIdController);
 router.delete("/jobs/:id", deleteJobByIdController);
 router.post("/:id/execute", executeJobController);
-router.post("/:id/webhook", triggerWebhookController);
+router.post("/webhook-test", triggerWebhookController);
 
 export default router;
