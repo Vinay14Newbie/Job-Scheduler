@@ -1,12 +1,15 @@
 import express from "express";
 import { PORT } from "./config/serverConfig.js";
 import jobRoutes from "./routers/jobRoutes.js";
+import cors from "cors";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.text());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(cors({ origin: "*" }));
 
 app.get("/ping", (req, res) => {
   console.log(req.user);
