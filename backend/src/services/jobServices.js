@@ -28,14 +28,40 @@ export const getJobByIdService = async (id) => {
   }
 };
 
-export const executeJobService = async (id) => {
-  const job = await getJobByIdService(id);
+export const executeJobService = async (jobId) => {
+  const job = await prisma.job.findUnique({
+    where: { id: jobId },
+  });
 
-  // simulate execution
-  await jobRepository.updateJobStatus(id, "running");
+  if (!job) {
+    throw new Error("JOB_NOT_FOUND");
+  }
 
+  if (job.status === "completed") {
+    throw new Error("JOB_ALREADY_COMPLETED");
+  }
+
+  // Mark as running
+  await prisma.job.update({
+    where: { id: jobId },
+    data: { status: "running" },
+  });
+
+  // Simulate execution
   setTimeout(async () => {
-    await jobRepository.updateJobStatus(id, "completed");
+    const completedJob = await prisma.job.update({
+      where: { id: jobId },
+      data: {
+        status: "completed",
+        completedAt: new Date(),
+      },
+    });
+
+    // Trigger webhook
+    await triggerWebhook({
+      webhookUrl: completedJob.webhookUrl,
+      job: completedJob,
+    });
   }, 3000);
 
   return { message: "Job execution started" };
