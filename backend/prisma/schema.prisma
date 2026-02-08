@@ -1,6 +1,5 @@
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -17,4 +16,17 @@ model Job {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   completedAt DateTime?
+  webhookLogs  WebhookLog[]
+}
+
+model WebhookLog {
+  id            Int      @id @default(autoincrement())
+  jobId         Int
+  url           String
+  status        String
+  responseCode  Int?
+  responseBody  Json?
+  createdAt     DateTime @default(now())
+
+  job Job @relation(fields: [jobId], references: [id])
 }

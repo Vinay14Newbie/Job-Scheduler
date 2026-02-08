@@ -1,4 +1,6 @@
 import * as jobRepository from "../repositories/jobRepository.js";
+import prisma from "../config/prismaConfig.js";
+import axios from "axios";
 
 export const createJobService = async (jobData) => {
   try {
@@ -29,9 +31,7 @@ export const getJobByIdService = async (id) => {
 };
 
 export const executeJobService = async (jobId) => {
-  const job = await prisma.job.findUnique({
-    where: { id: jobId },
-  });
+  const job = await getJobByIdService(jobId);
 
   if (!job) {
     throw new Error("JOB_NOT_FOUND");
@@ -58,7 +58,7 @@ export const executeJobService = async (jobId) => {
     });
 
     // Trigger webhook
-    await triggerWebhook({
+    await triggerWebhookService({
       webhookUrl: completedJob.webhookUrl,
       job: completedJob,
     });
