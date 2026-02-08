@@ -1,17 +1,15 @@
-import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
+import JobDetail from "./pages/JobDetail";
 
 function App() {
-  const [count, setCount] = useState(0);
-  const handleClick = () => {
-    setCount(count + 1);
-  };
   return (
-    <>
-      <div className="bg-sky-500" onClick={handleClick}>
-        {count}
-      </div>
-      <h1>Hello world</h1>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/jobs/:id" element={<JobDetail />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
