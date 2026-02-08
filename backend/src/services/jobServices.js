@@ -28,6 +28,7 @@ export const getJobByIdService = async (id) => {
     return job;
   } catch (error) {
     console.log("getJobId services error: ", error);
+    throw error;
   }
 };
 
@@ -56,6 +57,8 @@ export const executeJobService = async (jobId) => {
 
 // Helper function to complete job after 3 seconds
 const scheduleJobCompletion = (jobId) => {
+  console.log("Scheduling job completion for:", jobId);
+
   setTimeout(async () => {
     try {
       const completedJob = await prisma.job.update({

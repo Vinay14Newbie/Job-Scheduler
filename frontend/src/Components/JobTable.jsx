@@ -34,7 +34,7 @@ const JobTable = ({ jobs, reloadJobs }) => {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
-          {jobs.map((job) => (
+          {jobs?.map?.((job) => (
             <JobRow key={job.id} job={job} reloadJobs={reloadJobs} />
           ))}
         </tbody>
