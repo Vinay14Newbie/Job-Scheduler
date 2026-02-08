@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { fetchJobs } from "../apis/jobApi";
-import JobTable from "../components/JobTable";
-import FilterBar from "../components/FilterBar";
-import AddTaskForm from "../components/AddTaskForm";
-import Modal from "../components/Modal";
+import JobTable from "../Components/JobTable";
+import FilterBar from "../Components/FilterBar";
+import AddTaskForm from "../Components/AddTaskForm";
+import Modal from "../Components/Modal";
 
 const Dashboard = () => {
   const [jobs, setJobs] = useState([]);
