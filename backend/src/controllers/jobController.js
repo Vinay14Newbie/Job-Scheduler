@@ -68,12 +68,14 @@ export const executeJobController = async (req, res) => {
 
 export const triggerWebhookController = async (req, res) => {
   try {
+    const jobId = Number(req.params.id);
+    if (isNaN(jobId)) return res.status(400).json({ error: "Invalid job id" });
     const { webhookUrl } = req.body;
-    const result = await jobService.triggerWebhookService(
-      req.params.id,
-      webhookUrl,
-    );
-    res.json(result);
+    const job = await jobService.getJobByIdService(jobId);
+    if (!job) return res.status(404).json({ error: "Job not found" });
+
+    await jobService.triggerWebhookService({ webhookUrl, job });
+    return res.json({ message: "Webhook triggered" });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
