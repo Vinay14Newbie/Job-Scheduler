@@ -1,8 +1,8 @@
 const FilterBar = ({ filters, setFilters }) => {
   return (
-    <div className="flex gap-4 mb-4">
+    <div className="flex gap-4 mb-6">
       <select
-        className="border p-2 rounded"
+        className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-700 font-medium transition"
         value={filters.status}
         onChange={(e) => setFilters({ ...filters, status: e.target.value })}
       >
@@ -13,7 +13,7 @@ const FilterBar = ({ filters, setFilters }) => {
       </select>
 
       <select
-        className="border p-2 rounded"
+        className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-700 font-medium transition"
         value={filters.priority}
         onChange={(e) => setFilters({ ...filters, priority: e.target.value })}
       >
