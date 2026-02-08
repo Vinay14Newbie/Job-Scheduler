@@ -38,14 +38,21 @@ export const getJobByIdController = async (req, res) => {
 
 export const executeJobController = async (req, res) => {
   try {
-    const id = Number(req.params.id);
-    if (isNaN(id)) {
-      return res.status(400).json({ error: "Invalid job ID" });
+    const jobId = Number(req.params.id);
+
+    const result = await jobService.executeJobService(jobId);
+
+    res.status(200).json(result);
+  } catch (error) {
+    if (error.message === "JOB_NOT_FOUND") {
+      return res.status(404).json({ error: "Job not found" });
     }
-    const result = await jobService.executeJobService(id);
-    res.json(result);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+
+    if (error.message === "JOB_ALREADY_COMPLETED") {
+      return res.status(400).json({ error: "Job already completed" });
+    }
+
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
